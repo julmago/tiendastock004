@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Permitir acceso directo a archivos y directorios existentes
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Rutas públicas para tiendas minoristas
+RewriteRule ^shop/?$ shop/index.php [L]
+RewriteRule ^shop/([^/]+)/?$ shop/router.php?slug=$1 [L,QSA]
+
+# Rutas públicas para tiendas mayoristas
+RewriteRule ^mayorista/?$ mayorista/index.php [L]
+RewriteRule ^mayorista/([^/]+)/?$ mayorista/router.php?slug=$1 [L,QSA]

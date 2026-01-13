@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     }
 
     if (empty($err) && $itemsTotal>0) {
-      $sellerFeePercent = (float)setting($pdo,'seller_fee_percent','3');
+      $sellerFeePercent = (float)setting($pdo,'wholesale_fee_percent','2');
       $providerFeePercent = (float)setting($pdo,'provider_fee_percent','1');
 
       $sellerFee = $itemsTotal * ($sellerFeePercent/100.0);

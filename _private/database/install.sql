@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS settings (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT IGNORE INTO settings(`key`,`value`) VALUES
-('seller_fee_percent','3.00'),
+('retail_fee_percent','3.00'),
+('wholesale_fee_percent','2.00'),
 ('provider_fee_percent','1.00'),
 ('mp_extra_percent','6.00');
 
@@ -160,6 +161,18 @@ CREATE TABLE IF NOT EXISTS store_product_sources (
   UNIQUE KEY uq_sp_source (store_product_id, provider_product_id),
   CONSTRAINT fk_sps_sp FOREIGN KEY (store_product_id) REFERENCES store_products(id) ON DELETE CASCADE,
   CONSTRAINT fk_sps_pp FOREIGN KEY (provider_product_id) REFERENCES provider_products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS store_product_wholesale_sources (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  store_product_id BIGINT UNSIGNED NOT NULL,
+  wholesale_store_product_id BIGINT UNSIGNED NOT NULL,
+  enabled TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_sp_wh_source (store_product_id, wholesale_store_product_id),
+  CONSTRAINT fk_spsw_sp FOREIGN KEY (store_product_id) REFERENCES store_products(id) ON DELETE CASCADE,
+  CONSTRAINT fk_spsw_wsp FOREIGN KEY (wholesale_store_product_id) REFERENCES store_products(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS orders (

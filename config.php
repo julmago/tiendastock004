@@ -66,4 +66,16 @@ function require_any_role(array $roles, string $loginPath): void {
   require_login($loginPath);
   if (!in_array(($_SESSION['role'] ?? ''), $roles, true)) { http_response_code(403); exit('Acceso denegado'); }
 }
+
+function require_seller_kind(PDO $pdo, string $kind, string $loginPath): array {
+  require_role('seller', $loginPath);
+  $st = $pdo->prepare("SELECT id, wholesale_status, display_name FROM sellers WHERE user_id=? LIMIT 1");
+  $st->execute([(int)($_SESSION['uid'] ?? 0)]);
+  $seller = $st->fetch();
+  if (!$seller) { http_response_code(403); exit('Acceso denegado'); }
+  $status = $seller['wholesale_status'] ?? '';
+  if ($kind === 'minorista' && $status !== 'not_requested') { http_response_code(403); exit('Acceso denegado'); }
+  if ($kind === 'mayorista' && $status === 'not_requested') { http_response_code(403); exit('Acceso denegado'); }
+  return $seller;
+}
 ?>
